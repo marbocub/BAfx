@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 @marbocub <marbocub @ google mail>
+ * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 #ifndef LOG_VIEW_H

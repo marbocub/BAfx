@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 @marbocub <marbocub @ google mail>
+ * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 #ifndef BAFX_MESSAGE_H
@@ -41,6 +41,8 @@ enum {
 	M_SETUP_APPLICATION	= 'stup',
 
 	M_FILER_CHANGED		= 'chgd',
+
+	M_SHOW_MESSAGE		= 'mesg'
 };
 
 typedef struct {

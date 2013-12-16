@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 @marbocub <marbocub @ google mail>
+ * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 #include "PanedView.h"
@@ -8,9 +8,11 @@
 #include <String.h>
 #include <Cursor.h>
 
-//#define PANED_VIEW_DEBUG
-#ifdef PANED_VIEW_DEBUG
-#include <stdio.h>
+#ifdef CONTROL_DEBUG
+# include <cstdio>
+# define DEBUG_PRINT(x) {printf("%s:%s:", Name(),__FUNCTION__); printf x;}
+#else
+# define DEBUG_PRINT(x) do {} while (0)
 #endif
 
 uchar cursor_h_paned[] = {
@@ -131,7 +133,7 @@ PanedView::PanedView(BRect frame, const char* name, uint32 orientation,
 	mPositionLeftTop = mPositionRightBottom = -1;
 
 
-#ifdef PANED_VIEW_DEBUG
+#ifdef DEBUG
 	mView1->SetViewColor(120,100,100);
 	mView2->SetViewColor(100,120,100);
 #endif
@@ -268,15 +270,13 @@ PanedView::SetSplitPosition(float s)
 		rect2.bottom = rect0.bottom - mBottomBorder;
 	}
 
-#ifdef PANED_VIEW_DEBUG
-	printf("PanedView::SetSplitPosition: %f\n", s);
-	printf("rect0: ");
-	printf("(%f,%f)-(%f,%f)\n", rect0.left, rect0.top, rect0.right, rect0.bottom);
-	printf("rect1: ");
-	printf("(%f,%f)-(%f,%f)\n", rect1.left, rect1.top, rect1.right, rect1.bottom);
-	printf("rect2: ");
-	printf("(%f,%f)-(%f,%f)\n", rect2.left, rect2.top, rect2.right, rect2.bottom);
-#endif
+	DEBUG_PRINT(("PanedView::SetSplitPosition: %f\n", s));
+	DEBUG_PRINT(("rect0: "));
+	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect0.left, rect0.top, rect0.right, rect0.bottom));
+	DEBUG_PRINT(("rect1: "));
+	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect1.left, rect1.top, rect1.right, rect1.bottom));
+	DEBUG_PRINT(("rect2: "));
+	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect2.left, rect2.top, rect2.right, rect2.bottom));
 
 	mView1->MoveTo(rect1.left, rect1.top);
 	mView1->ResizeTo(rect1.Width(), rect1.Height());

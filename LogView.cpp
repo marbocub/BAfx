@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 @marbocub <marbocub @ google mail>
+ * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 #include "LogView.h"
@@ -8,9 +8,11 @@
 #include <TextView.h>
 #include <ScrollView.h>
 
-#define LOG_VIEW_DEBUG
-#ifdef LOG_VIEW_DEBUG
-#  include <stdio.h>
+#ifdef DEBUG
+# include <cstdio>
+# define DEBUG_PRINT(x) {printf("%s:%s:", Name(),__FUNCTION__); printf x;}
+#else
+# define DEBUG_PRINT(x) do {} while (0)
 #endif
 
 class LogTextView : public BTextView
@@ -29,7 +31,7 @@ public:
 
 	virtual void MakeFocus(bool flag)
 	{
-printf("MakeFocus:%s\n", flag ? "true":"false");
+		DEBUG_PRINT(("%s:%s\n", __FUNCTION__, flag ? "true":"false"));
 		if (!flag) {
 			Select(TextLength()-1, TextLength()-1);
 			ScrollToSelection();
@@ -47,19 +49,17 @@ LogView::LogView(BRect frame, const char* name, uint32 resizingMode, uint32 flag
 		B_FOLLOW_ALL_SIDES,
 		B_WILL_DRAW | B_PULSE_NEEDED
 	);
-	AddChild(mTextView);
-//	mLogView->SetViewColor(back_color);
-//	mLogView->SetLowColor(back_color);
-//	mLogView->SetHighColor(fore_color);
-//	mScrollView = new BScrollView();
-//	AddChild(mScrollView);
+	mScrollView = new BScrollView(NULL, mTextView,
+		B_FOLLOW_ALL_SIDES, 0, false, true, B_PLAIN_BORDER);
+	AddChild(mScrollView);
 }
 
 LogView::~LogView()
 {
+	mScrollView->RemoveChild(mTextView);
 	delete mTextView;
-//	RemoveChild(mScrollView);
-//	delete mScrollView;
+	RemoveChild(mScrollView);
+	delete mScrollView;
 }
 
 void
@@ -82,6 +82,7 @@ void
 LogView::PutText(const char* text)
 {
 	mTextView->Insert(text);
-			mTextView->Select(mTextView->TextLength()-1, mTextView->TextLength()-1);
-			mTextView->ScrollToSelection();
+	mTextView->Select(mTextView->TextLength()-1, mTextView->TextLength()-1);
+	mTextView->ScrollToSelection();
+	mTextView->Invalidate();
 }

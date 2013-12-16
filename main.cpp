@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 @marbocub <marbocub @ google mail>
+ * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
  * All rights reserved. Distributed under the terms of the MIT license.
  */
 #include <SupportDefs.h>
@@ -13,23 +13,20 @@
 class BafxApp : public BApplication
 {
 public:
-	BafxApp(void);
+	BafxApp(void) : BApplication("application/x-vnd.marbocub-BafxApp")
+	{
+		mWindow = new BafxWindow(
+			BRect(100,100,100+640,100+480),
+			"BAfx App",
+			B_DOCUMENT_WINDOW,
+			0
+		);
+		mWindow->Show();
+	}
 private:
 	virtual void ReadyToRun(void);
 	BafxWindow*	mWindow;
 };
-
-BafxApp::BafxApp(void)
-	: BApplication("application/x-vnd.marbocub-BafxApp")
-{
-	mWindow = new BafxWindow(
-		BRect(100,100,100+640,100+480),
-		"BAfx App",
-		B_DOCUMENT_WINDOW,
-		0
-	);
-	mWindow->Show();
-}
 
 void
 BafxApp::ReadyToRun(void)
