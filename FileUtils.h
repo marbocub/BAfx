@@ -10,7 +10,6 @@
 #include <Directory.h>
 #include <Entry.h>
 #include <List.h>
-#include <SymLink.h>
 
 class EntryList : public BList {
 public:
@@ -39,10 +38,6 @@ status_t MakeDirectory(BDirectory* srcDir, BDirectory* newDir, char* name, bool 
 status_t GetParentDirectory(BDirectory* srcDir, BDirectory* newDir);
 status_t MoveEntry(BEntry* srcEntry, BDirectory* destDir);
 status_t RemoveEntry(BEntry* entry);
-
-//bool Copy(BEntry& srcEntry, BDirectory& destDir);
-//bool Move(BEntry& srcEntry, BDirectory& destDir);
-//bool Remove(BEntry& targetEntry);
 };
 
 #endif // FILE_UTILS_H
