@@ -5,8 +5,8 @@
  */
 
 
-#ifndef LOG_VIEW_H
-#define LOG_VIEW_H
+#ifndef TEXT_FILE_VIEW_H
+#define TEXT_FILE_VIEW_H
 
 #include <SupportDefs.h>
 
@@ -14,16 +14,20 @@
 #include <TextView.h>
 
 
-class LogView : public BView
+class TextFileView : public BView
 {
 public:
-	LogView(BRect frame, const char* name,
+	TextFileView(BRect frame, const char* name,
 		uint32 resizingMode = B_FOLLOW_ALL,
 		uint32 flags = B_WILL_DRAW | B_FRAME_EVENTS);
-	~LogView();
-	void PutText(const char* text);
+	~TextFileView();
+	void AttachedToWindow();
+	void KeyDown(const char* bytes, int32 numBytes);
+	void MakeFocus(bool focused);
+
 	void SetBackgroundColor(rgb_color color);
 	void SetTextColor(rgb_color color);
+	void PutText(const char* text);
 
 private:
 	BScrollView*	mScrollView;

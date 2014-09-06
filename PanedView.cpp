@@ -1,12 +1,17 @@
 /*
- * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
- * All rights reserved. Distributed under the terms of the MIT license.
+ * Copyright 2012-2014 @marbocub <marbocub@gmail.com>
+ * All rights reserved.
+ * Distributed under the terms of the MIT license.
  */
+
+
 #include "PanedView.h"
 
 #include <View.h> 
-#include <String.h>
 #include <Cursor.h>
+
+
+#undef CONTROL_DEBUG
 
 #ifdef CONTROL_DEBUG
 # include <cstdio>
@@ -14,6 +19,7 @@
 #else
 # define DEBUG_PRINT(x) do {} while (0)
 #endif
+
 
 uchar cursor_h_paned[] = {
 	16, 1, 7, 7,
@@ -54,6 +60,8 @@ uchar cursor_h_paned[] = {
 	
 	0
 };
+
+
 uchar cursor_v_paned[] = {
 	16, 1, 7, 7,
 
@@ -94,68 +102,74 @@ uchar cursor_v_paned[] = {
 	0
 };
 
+
 PanedView::PanedView(BRect frame, const char* name, uint32 orientation,
 		uint32 paned_follow_mode, uint32 resizingMode, uint32 flags)
-		: BView(frame, name, resizingMode, flags)
+	: BView(frame, name, resizingMode, flags),
+	  mView1(new BView(BRect(0,0,0,0),NULL,B_FOLLOW_NONE,B_WILL_DRAW)),
+	  mView2(new BView(BRect(0,0,0,0),NULL,B_FOLLOW_NONE,B_WILL_DRAW)),
+	  mChild1(NULL),
+	  mChild2(NULL),
+	  mPositionLeftTop(-1),
+	  mPositionRightBottom(-1),
+	  mTopBorder(0),
+	  mLeftBorder(0),
+	  mRightBorder(0),
+	  mBottomBorder(0),
+	  mOrientation(orientation),
+	  mDragMode(false),
+	  mDragStartPoint(0,0),
+	  mPanedFollowMode(paned_follow_mode)
 {
-	BString	sub_view_name;
-	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-
-	sub_view_name.SetTo(name);
-	sub_view_name.Append("_view1");
-	mView1 = new BView(
-		BRect(0,0,0,0),
-		sub_view_name.String(),
-		B_FOLLOW_NONE,
-		B_WILL_DRAW
-	);
 	AddChild(mView1);
-
-	sub_view_name.SetTo(name);
-	sub_view_name.Append("_view1");
-	mView2 = new BView(
-		BRect(0,0,0,0),
-		sub_view_name.String(),
-		B_FOLLOW_NONE,
-		B_WILL_DRAW
-	);
 	AddChild(mView2);
-
-	mChild1 = NULL;
-	mChild2  = NULL;
-	mDragMode = false;
-	mTopBorder = 0;
-	mLeftBorder = 0;
-	mRightBorder = 0;
-	mBottomBorder = 0;
-	mOrientation   = orientation;
-	mPanedFollowMode= paned_follow_mode;
-	mPositionLeftTop = mPositionRightBottom = -1;
-
-
-#ifdef DEBUG
-	mView1->SetViewColor(120,100,100);
-	mView2->SetViewColor(100,120,100);
-#endif
 }
+
 
 PanedView::~PanedView()
 {
-	RemoveChild(mView1);
-	delete mView1;
-	RemoveChild(mView2);
-	delete mView2;
 }
+
 
 void
 PanedView::AttachedToWindow()
 {
-//	if (Parent())
-//		SetViewColor(Parent()->ViewColor());
+	if (Parent()) {
+		SetViewColor(Parent()->ViewColor());
+		SetHighColor(Parent()->HighColor());
+		SetLowColor (Parent()->LowColor() );
+	}
 	BView::AttachedToWindow();
-
 	FrameResized(Bounds().Width(), Bounds().Height());
 }
+
+
+void
+PanedView::SetViewColor(rgb_color color)
+{
+	BView::SetViewColor(color);
+	mView1->SetViewColor(color);
+	mView2->SetViewColor(color);
+}
+
+
+void
+PanedView::SetHighColor(rgb_color color)
+{
+	BView::SetHighColor(color);
+	mView1->SetHighColor(color);
+	mView2->SetHighColor(color);
+}
+
+
+void
+PanedView::SetLowColor(rgb_color color)
+{
+	BView::SetLowColor(color);
+	mView1->SetLowColor(color);
+	mView2->SetLowColor(color);
+}
+
 
 void
 PanedView::FrameResized(float width, float height)
@@ -192,7 +206,10 @@ PanedView::FrameResized(float width, float height)
 		}
 	}
 	SetSplitPosition(pos);
+
+	BView::FrameResized(width, height);
 }
+
 
 void
 PanedView::MouseDown(BPoint point)
@@ -200,6 +217,7 @@ PanedView::MouseDown(BPoint point)
 	mDragMode = true;
 	SetMouseEventMask(B_POINTER_EVENTS);
 }
+
 
 void
 PanedView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
@@ -223,6 +241,7 @@ PanedView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 	}
 }
 
+
 void
 PanedView::MouseUp(BPoint point)
 {
@@ -230,6 +249,7 @@ PanedView::MouseUp(BPoint point)
 		mDragMode = false;
 	}
 }
+
 
 void
 PanedView::SetSplitPosition(float s)
@@ -243,7 +263,7 @@ PanedView::SetSplitPosition(float s)
 			s = rect0.left + SEPARATION_SIZE/2.0;
 		if (s > rect0.right - SEPARATION_SIZE/2.0)
 			s = rect0.right - SEPARATION_SIZE/2.0;
-		
+
 		rect1.top    = rect0.top    + mTopBorder;
 		rect1.left   = rect0.left   + mLeftBorder;
 		rect1.right  = (int)(s - (SEPARATION_SIZE/2.0));
@@ -270,19 +290,30 @@ PanedView::SetSplitPosition(float s)
 		rect2.bottom = rect0.bottom - mBottomBorder;
 	}
 
+	if (rect1.top > rect1.bottom)
+		rect1.bottom = rect1.top;
+	if (rect1.left > rect1.right)
+		rect1.right = rect1.left;
+
+	if (rect2.top > rect2.bottom)
+		rect2.bottom = rect2.top;
+	if (rect2.left > rect2.right)
+		rect2.right = rect2.left;
+
 	DEBUG_PRINT(("PanedView::SetSplitPosition: %f\n", s));
 	DEBUG_PRINT(("rect0: "));
 	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect0.left, rect0.top, rect0.right, rect0.bottom));
 	DEBUG_PRINT(("rect1: "));
-	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect1.left, rect1.top, rect1.right, rect1.bottom));
+	DEBUG_PRINT(("(%f,%f)-(%f,%f), w:%f, h:%f\n", rect1.left, rect1.top, rect1.right, rect1.bottom, rect1.Width(), rect1.Height()));
 	DEBUG_PRINT(("rect2: "));
-	DEBUG_PRINT(("(%f,%f)-(%f,%f)\n", rect2.left, rect2.top, rect2.right, rect2.bottom));
+	DEBUG_PRINT(("(%f,%f)-(%f,%f), w:%f, h:%f\n", rect2.left, rect2.top, rect2.right, rect2.bottom, rect2.Width(), rect2.Height()));
 
-	mView1->MoveTo(rect1.left, rect1.top);
 	mView1->ResizeTo(rect1.Width(), rect1.Height());
-	mView2->MoveTo(rect2.left, rect2.top);
+	mView1->MoveTo(rect1.left, rect1.top);
+
 	mView2->ResizeTo(rect2.Width(), rect2.Height());
-	
+	mView2->MoveTo(rect2.left, rect2.top);
+
 	mPositionLeftTop = s;
 	if (mOrientation == H_PANED) {
 		mPositionRightBottom = rect0.Width() - s;
@@ -290,6 +321,7 @@ PanedView::SetSplitPosition(float s)
 		mPositionRightBottom = rect0.Height() - s;
 	}
 }
+
 
 void
 PanedView::SetBorderWidth(float border)
@@ -302,11 +334,13 @@ PanedView::SetBorderWidth(float border)
 	SetSplitPosition(mPositionLeftTop);
 }
 
+
 void
 PanedView::SetRightBorder(float border)
 {
 	mRightBorder = border;
 }
+
 
 void
 PanedView::SetChild1(BView* child)
@@ -321,6 +355,7 @@ PanedView::SetChild1(BView* child)
 	SetSplitPosition(mPositionLeftTop);
 }
 
+
 void
 PanedView::SetChild2(BView* child)
 {
@@ -334,11 +369,13 @@ PanedView::SetChild2(BView* child)
 	SetSplitPosition(mPositionLeftTop);
 }
 
+
 BView*
 PanedView::GetChild1(void)
 {
 	return mChild1;
 }
+
 
 BView*
 PanedView::GetChild2(void)
@@ -346,11 +383,13 @@ PanedView::GetChild2(void)
 	return mChild2;
 }
 
+
 BRect
 PanedView::Bounds1(void)
 {
 	return mView1->Bounds();
 }
+
 
 BRect
 PanedView::Bounds2(void)

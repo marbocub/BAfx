@@ -1,11 +1,15 @@
 /*
- * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
- * All rights reserved. Distributed under the terms of the MIT license.
+ * Copyright 2012-2014 @marbocub <marbocub@gmail.com>
+ * All rights reserved.
+ * Distributed under the terms of the MIT license.
  */
+
+
 #ifndef BAFX_MESSAGE_H
 #define BAFX_MESSAGE_H
 
 #include <SupportDefs.h>
+
 
 enum {
 	M_COPY_FILE			= 'cp__',
@@ -17,6 +21,7 @@ enum {
 
 	M_OPEN_FILE			= 'open',
 	M_VIEW_FILE			= 'view',
+	M_RETURN_TO_FILER	= 'filr',
 	M_EDIT_FILE			= 'edit',
 	M_EXEC_FILE			= 'exec',
 	M_MARK_FILE			= 'mark',

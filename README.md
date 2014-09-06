@@ -12,22 +12,13 @@ Implemented
 -----------
 
 	Directory viewer
-	Simple file/directory operation (copy/move/remove)
 
 Under the developing
 --------------------
 
-	Create directory operation
+	File and directory operations (cp/mv/rm/mkdir/rmdir)
 	Built-in text viewer
 	Built-in image viewer
-	Other file operations and directory operations
-
-See Also
-========
-
-This program has been designed as modeled the [Afxw.exe for Windows by SystemAKT][1].
-
-[1]:http://www.h5.dion.ne.jp/~akt/akt_afxw.htm
 
 License
 =======

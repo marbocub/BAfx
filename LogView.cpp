@@ -1,12 +1,18 @@
 /*
- * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
- * All rights reserved. Distributed under the terms of the MIT license.
+ * Copyright 2012-2014 @marbocub <marbocub@gmail.com>
+ * All rights reserved.
+ * Distributed under the terms of the MIT license.
  */
+
+
 #include "LogView.h"
 
 #include <View.h>
 #include <TextView.h>
 #include <ScrollView.h>
+
+
+#undef DEBUG
 
 #ifdef DEBUG
 # include <cstdio>
@@ -14,6 +20,7 @@
 #else
 # define DEBUG_PRINT(x) do {} while (0)
 #endif
+
 
 class LogTextView : public BTextView
 {
@@ -39,6 +46,7 @@ public:
 	}
 };
 
+
 LogView::LogView(BRect frame, const char* name, uint32 resizingMode, uint32 flags)
 		: BView(frame, name, resizingMode, flags)
 {
@@ -54,6 +62,7 @@ LogView::LogView(BRect frame, const char* name, uint32 resizingMode, uint32 flag
 	AddChild(mScrollView);
 }
 
+
 LogView::~LogView()
 {
 	mScrollView->RemoveChild(mTextView);
@@ -62,12 +71,14 @@ LogView::~LogView()
 	delete mScrollView;
 }
 
+
 void
 LogView::SetBackgroundColor(rgb_color color)
 {
 	mTextView->SetLowColor(color);
 	mTextView->SetViewColor(color);
 }
+
 
 void
 LogView::SetTextColor(rgb_color color)
@@ -77,6 +88,7 @@ LogView::SetTextColor(rgb_color color)
 	mTextView->SetFontAndColor(&font, B_FONT_ALL, &color);
 	mTextView->SetHighColor(color);
 }
+
 
 void
 LogView::PutText(const char* text)

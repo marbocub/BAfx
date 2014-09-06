@@ -1,14 +1,19 @@
 /*
- * Copyright 2012-2013 @marbocub <marbocub @ gmail com>
- * All rights reserved. Distributed under the terms of the MIT license.
+ * Copyright 2012-2014 @marbocub <marbocub@gmail.com>
+ * All rights reserved.
+ * Distributed under the terms of the MIT license.
  */
+
+
 #include "BafxMessage.h"
 #include <InterfaceDefs.h>
 
 #include <malloc.h>
 #include <string.h>
 
+
 BafxKeymap *keymap = NULL;
+
 
 const BafxKeymap default_keymap[] = {
 	// key			modifiers	message
@@ -59,6 +64,7 @@ const BafxKeymap default_keymap[] = {
 	{0,				0,			0}
 };
 
+
 extern "C" void bafx_setup_keymap(void)
 {
 	if (keymap == NULL) {
@@ -68,9 +74,12 @@ extern "C" void bafx_setup_keymap(void)
 
 }
 
+
 extern "C" uint32 bafx_key_to_message(char key, int32 modifiers)
 {
 	bafx_setup_keymap();
+
+	modifiers &= ~(B_CAPS_LOCK | B_SCROLL_LOCK | B_NUM_LOCK);
 
 	for (int32 i=0; keymap[i].key!=0; i++) {
 		if ((key == keymap[i].key) && (modifiers == keymap[i].modifiers))
@@ -79,6 +88,7 @@ extern "C" uint32 bafx_key_to_message(char key, int32 modifiers)
 
 	return 0;
 }
+
 
 extern "C" void bafx_free_keymap(void)
 {
