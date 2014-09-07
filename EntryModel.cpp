@@ -852,8 +852,8 @@ Visitor::UnsetCancel()
 /*
  * class ListVisitor
  */
-ListVisitor::ListVisitor(Entry& entry, BList* dstList=NULL, BList* dstLeaf=NULL,
-		bool recursive=false, bool insertNullAsUpDir=false)
+ListVisitor::ListVisitor(Entry& entry, BList* dstList, BList* dstLeaf,
+		bool recursive, bool insertNullAsUpDir)
 	: srcEntry_(&entry),
 	  srcEntryListPointer_(NULL),
 	  dstList_(dstList),

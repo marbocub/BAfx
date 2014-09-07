@@ -19,8 +19,7 @@
 #endif
 
 
-EntryListItem::EntryListItem(Entry* entry, 
-		EntryItemType type = ENTRY_IS_CHILDLEN)
+EntryListItem::EntryListItem(Entry* entry, EntryItemType type)
 	: BListItem(),
 	  entry_(entry),
 	  marked_(false),

@@ -176,10 +176,10 @@ public:
 	EntryList();
 	~EntryList();
 	void AddItem(Entry* entry, BString* leaf=NULL);
-	void EntryList::DeleteItem(int32 index);
 	void RemoveItem(int32 index);
-	void EntryList::DeleteAllItems();
 	void MakeEmpty();
+	void DeleteItem(int32 index);
+	void DeleteAllItems();
 	int32 CountItems();
 	Entry* EntryAt(int32 index);
 	BString* LeafAt(int32 index);
