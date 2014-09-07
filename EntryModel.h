@@ -51,9 +51,10 @@ public:
 
 class File : public Entry {
 private:
-	BEntry entry_;
+	entry_ref	ref_;
 public:
 	File(const BEntry&);
+	File(const entry_ref&);
 	File(const File&);
 	~File();
 	void Accept(Visitor*, void* optionalData=NULL);
@@ -70,9 +71,10 @@ public:
 
 class Directory : public Entry {
 private:
-	BEntry entry_;
+	entry_ref	ref_;
 public:
 	Directory(const BEntry&);
+	Directory(const entry_ref&);
 	Directory(const Directory&);
 	~Directory();
 	void Accept(Visitor*, void* optionalData=NULL);
@@ -90,9 +92,10 @@ public:
 
 class SymLink : public Entry {
 private:
-	BEntry entry_;
+	entry_ref	ref_;
 public:
 	SymLink(const BEntry&);
+	SymLink(const entry_ref&);
 	SymLink(const SymLink&);
 	~SymLink();
 	void Accept(Visitor*, void* optionalData=NULL);

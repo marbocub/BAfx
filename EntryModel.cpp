@@ -158,20 +158,26 @@ Entry::operator!=(const Entry& item) const
  * class File
  */
 File::File(const BEntry& entry)
-	: entry_(entry)
+	: ref_()
+{
+	if (entry.InitCheck() == B_OK) {
+		entry.GetRef(&ref_);
+	}
+}
+
+
+File::File(const entry_ref& ref)
+	: ref_(ref)
 {
 }
 
 
 File::File(const File& file)
-	: entry_()
+	: ref_()
 {
 	BEntry entry;
 	file.GetBEntry(&entry);
-
-	entry_ref ref;
-	entry.GetRef(&ref);
-	entry_.SetTo(&ref);
+	entry.GetRef(&ref_);
 }
 
 
@@ -190,8 +196,7 @@ File::Accept(Visitor* v, void* optionalData)
 status_t
 File::GetBEntry(BEntry* entry) const
 {
-	*entry = entry_;
-	return entry_.InitCheck();
+	return entry->SetTo(&ref_);
 }
 
 
@@ -205,21 +210,43 @@ File::GetVEntry(VEntry* entry) const
 status_t
 File::GetName(char* name) const
 {
-	return entry_.GetName(name);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	name[0] = '\0';
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetName(name);
+	}
+	return retcode;
 }
 
 
 status_t
 File::GetSize(off_t* size) const
 {
-	return entry_.GetSize(size);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	*size = 0;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetSize(size);
+	}
+	return retcode;
 }
 
 
 status_t
 File::GetModificationTime(time_t* mtime) const
 {
-	return entry_.GetModificationTime(mtime);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetModificationTime(mtime);
+	}
+	return retcode;
 }
 
 
@@ -233,7 +260,7 @@ File::IsFile() const
 Entry*
 File::duplicate() const
 {
-	return new File(entry_);
+	return new File(ref_);
 }
 
 
@@ -241,12 +268,14 @@ bool
 File::operator==(const Entry& item) const
 {
 	BEntry entry2;
+	entry_ref ref;
 
 	if (item.GetBEntry(&entry2) != B_OK) {
 		return false;
 	}
+	entry2.GetRef(&ref);
 
-	return (entry_==entry2);
+	return (ref_==ref);
 }
 
 
@@ -254,20 +283,26 @@ File::operator==(const Entry& item) const
  * class Directory
  */
 Directory::Directory(const BEntry& entry)
-	: entry_(entry)
+	: ref_()
+{
+	if (entry.InitCheck() == B_OK) {
+		entry.GetRef(&ref_);
+	}
+}
+
+
+Directory::Directory(const entry_ref& ref)
+	: ref_(ref)
 {
 }
 
 
 Directory::Directory(const Directory& dir)
-	: entry_()
+	: ref_()
 {
 	BEntry entry;
 	dir.GetBEntry(&entry);
-
-	entry_ref ref;
-	entry.GetRef(&ref);
-	entry_.SetTo(&ref);
+	entry.GetRef(&ref_);
 }
 
 
@@ -286,8 +321,7 @@ Directory::Accept(Visitor* v, void* optionalData)
 status_t
 Directory::GetBEntry(BEntry* entry) const
 {
-	*entry = entry_;
-	return entry_.InitCheck();
+	return entry->SetTo(&ref_);
 }
 
 
@@ -301,21 +335,43 @@ Directory::GetVEntry(VEntry* entry) const
 status_t
 Directory::GetName(char *name) const
 {
-	return entry_.GetName(name);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	name[0] = '\0';
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetName(name);
+	}
+	return retcode;
 }
 
 
 status_t
 Directory::GetSize(off_t* size) const
 {
-	return entry_.GetSize(size);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	*size = 0;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetSize(size);
+	}
+	return retcode;
 }
 
 
 status_t
 Directory::GetModificationTime(time_t* mtime) const
 {
-	return entry_.GetModificationTime(mtime);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetModificationTime(mtime);
+	}
+	return retcode;
 }
 
 
@@ -334,7 +390,10 @@ Directory::GetPath(BString* str) const
 	*str = "";
 
 	BPath path;
-	if ((retval = entry_.GetPath(&path)) != B_OK)
+	BEntry entry(&ref_);
+	if ((retval = entry.InitCheck()) != B_OK)
+		return retval;
+	if ((retval = entry.GetPath(&path)) != B_OK)
 		return retval;
 	*str = path.Path();
 
@@ -345,7 +404,7 @@ Directory::GetPath(BString* str) const
 Entry*
 Directory::duplicate() const
 {
-	return new Directory(entry_);
+	return new Directory(ref_);
 }
 
 
@@ -353,12 +412,14 @@ bool
 Directory::operator==(const Entry& item) const
 {
 	BEntry entry2;
+	entry_ref ref;
 
 	if (item.GetBEntry(&entry2) != B_OK) {
 		return false;
 	}
+	entry2.GetRef(&ref);
 
-	return (entry_==entry2);
+	return (ref_==ref);
 }
 
 
@@ -366,20 +427,26 @@ Directory::operator==(const Entry& item) const
  * class SymLink
  */
 SymLink::SymLink(const BEntry& entry)
-	: entry_(entry)
+	: ref_()
+{
+	if (entry.InitCheck() == B_OK) {
+		entry.GetRef(&ref_);
+	}
+}
+
+
+SymLink::SymLink(const entry_ref& ref)
+	: ref_(ref)
 {
 }
 
 
 SymLink::SymLink(const SymLink& link)
-	: entry_()
+	: ref_()
 {
 	BEntry entry;
 	link.GetBEntry(&entry);
-
-	entry_ref ref;
-	entry.GetRef(&ref);
-	entry_.SetTo(&ref);
+	entry.GetRef(&ref_);
 }
 
 
@@ -398,8 +465,7 @@ SymLink::Accept(Visitor* v, void* optionalData)
 status_t
 SymLink::GetBEntry(BEntry* entry) const
 {
-	*entry = entry_;
-	return entry_.InitCheck();
+	return entry->SetTo(&ref_);
 }
 
 
@@ -413,31 +479,50 @@ SymLink::GetVEntry(VEntry* entry) const
 status_t
 SymLink::GetName(char *name) const
 {
-	return entry_.GetName(name);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	name[0] = '\0';
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetName(name);
+	}
+	return retcode;
 }
 
 
 status_t
 SymLink::GetSize(off_t* size) const
 {
-	return entry_.GetSize(size);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	*size = 0;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetSize(size);
+	}
+	return retcode;
 }
 
 
 status_t
 SymLink::GetModificationTime(time_t* mtime) const
 {
-	return entry_.GetModificationTime(mtime);
+	BEntry entry(&ref_);
+	status_t retcode;
+
+	if ((retcode = entry.InitCheck()) == B_OK) {
+		retcode = entry.GetModificationTime(mtime);
+	}
+	return retcode;
 }
 
 
 bool
 SymLink::IsFile() const
 {
-	entry_ref ref;
-	entry_.GetRef(&ref);
-	BEntry linked(&ref, true);
-
+	BEntry linked(&ref_, true);
 	return linked.IsFile();
 }
 
@@ -445,10 +530,7 @@ SymLink::IsFile() const
 bool
 SymLink::IsDirectory() const
 {
-	entry_ref ref;
-	entry_.GetRef(&ref);
-	BEntry linked(&ref, true);
-
+	BEntry linked(&ref_, true);
 	return linked.IsDirectory();
 }
 
@@ -463,7 +545,7 @@ SymLink::IsSymLink() const
 ssize_t
 SymLink::ReadLink(char* buf, size_t length) const
 {
-	BSymLink link(&entry_);
+	BSymLink link(&ref_);
 	return link.ReadLink(buf, length);
 }
 
@@ -471,7 +553,7 @@ SymLink::ReadLink(char* buf, size_t length) const
 Entry*
 SymLink::duplicate() const
 {
-	return new SymLink(entry_);
+	return new SymLink(ref_);
 }
 
 
@@ -479,12 +561,14 @@ bool
 SymLink::operator==(const Entry& item) const
 {
 	BEntry entry2;
+	entry_ref ref;
 
 	if (item.GetBEntry(&entry2) != B_OK) {
 		return false;
 	}
+	entry2.GetRef(&ref);
 
-	return (entry_==entry2);
+	return (ref_==ref);
 }
 
 
