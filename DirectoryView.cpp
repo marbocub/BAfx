@@ -476,6 +476,8 @@ DirectoryView::MessageReceived(BMessage *message)
 	// filer reqest
 	//
 	case M_ENTER_FILE:
+		if (mListView->CurrentSelection() < 0)
+			break;
 		if (((EntryListView*)mListView)->IsDirectory()) {
 			bool parent = mListView->IsParent();
 			Entry* entry = ((EntryListView*)mListView)->GetEntry();
@@ -546,10 +548,13 @@ DirectoryView::MessageReceived(BMessage *message)
 
 /*
 void
-NodeWatcherHandler(BMessage *msg)
+DirectoryView::NodeWatcherHandler(BMessage *msg)
 {
 	int32 opcode;
 	if (msg->FindInt32("opcode", &opcode) != B_OK)
+		return;
+
+	if (entry_ == NULL)
 		return;
 
 	const char* name;
