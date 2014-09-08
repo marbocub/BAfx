@@ -231,9 +231,9 @@ EntryListItem::DrawFileSize(EntryListView* list_view, BRect frame, BFont &font, 
 	} else {
 		sizestr.SetTo("<\?\?\?>");
 	}
-	pos.x -= font.StringWidth(sizestr);
+	pos.x -= font.StringWidth(sizestr.String());
 	list_view->MovePenTo(pos);
-	list_view->DrawString(sizestr);
+	list_view->DrawString(sizestr.String());
 
 	pos.x -= font.StringWidth(" ");
 }
@@ -276,7 +276,7 @@ EntryListItem::DrawFileName(EntryListView* list_view, BRect frame, BFont &font, 
 	}
 
 	list_view->MovePenTo(frame.left + border_.left, pos.y);
-	list_view->DrawString(namestr);
+	list_view->DrawString(namestr.String());
 }
 
 

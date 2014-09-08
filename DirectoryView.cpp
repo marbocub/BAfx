@@ -221,7 +221,7 @@ private:
 		BString count;
 
 		FormatCountString(&count, totalFiles_, totalDirs_, totalBytes_);
-		mTotalCount_->SetText(count);
+		mTotalCount_->SetText(count.String());
 
 		if (markedDirs_ > 0 || markedFiles_ > 0) {
 			FormatCountString(&count, markedFiles_, markedDirs_, markedBytes_);
@@ -229,7 +229,7 @@ private:
 		} else {
 			count.SetTo("");
 		}
-		mMarkedCount_->SetText(count);
+		mMarkedCount_->SetText(count.String());
 
 		Invalidate();
 	}
