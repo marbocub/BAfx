@@ -210,21 +210,24 @@ File::GetVEntry(VEntry* entry) const
 status_t
 File::GetName(char* name) const
 {
-	BEntry entry(&ref_);
-	status_t retcode;
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (name == NULL)
+		return B_BAD_VALUE;
 
-	name[0] = '\0';
-
-	if ((retcode = entry.InitCheck()) == B_OK) {
-		retcode = entry.GetName(name);
-	}
-	return retcode;
+	strcpy(name, ref_.name);
+	return B_OK;
 }
 
 
 status_t
 File::GetSize(off_t* size) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (size == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
@@ -240,6 +243,11 @@ File::GetSize(off_t* size) const
 status_t
 File::GetModificationTime(time_t* mtime) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (mtime == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
@@ -335,21 +343,24 @@ Directory::GetVEntry(VEntry* entry) const
 status_t
 Directory::GetName(char *name) const
 {
-	BEntry entry(&ref_);
-	status_t retcode;
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (name == NULL)
+		return B_BAD_VALUE;
 
-	name[0] = '\0';
-
-	if ((retcode = entry.InitCheck()) == B_OK) {
-		retcode = entry.GetName(name);
-	}
-	return retcode;
+	strcpy(name, ref_.name);
+	return B_OK;
 }
 
 
 status_t
 Directory::GetSize(off_t* size) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (size == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
@@ -365,6 +376,11 @@ Directory::GetSize(off_t* size) const
 status_t
 Directory::GetModificationTime(time_t* mtime) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (mtime == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
@@ -479,21 +495,24 @@ SymLink::GetVEntry(VEntry* entry) const
 status_t
 SymLink::GetName(char *name) const
 {
-	BEntry entry(&ref_);
-	status_t retcode;
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (name == NULL)
+		return B_BAD_VALUE;
 
-	name[0] = '\0';
-
-	if ((retcode = entry.InitCheck()) == B_OK) {
-		retcode = entry.GetName(name);
-	}
-	return retcode;
+	strcpy(name, ref_.name);
+	return B_OK;
 }
 
 
 status_t
 SymLink::GetSize(off_t* size) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (size == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
@@ -509,6 +528,11 @@ SymLink::GetSize(off_t* size) const
 status_t
 SymLink::GetModificationTime(time_t* mtime) const
 {
+	if (ref_.name == NULL)
+		return B_NO_INIT;
+	if (mtime == NULL)
+		return B_BAD_VALUE;
+
 	BEntry entry(&ref_);
 	status_t retcode;
 
