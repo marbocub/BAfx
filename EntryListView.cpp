@@ -267,7 +267,7 @@ EntryListItem::DrawFileName(EntryListView* list_view, BRect frame, BFont &font, 
 		if (len < namestr.Length()) {
 			int start = len - 3;
 			if (start < 6) start = 6;
-			namestr.Remove(start, namestr.Length());
+			namestr.Remove(start, namestr.Length() - start);
 			namestr.Append("···");
 		}
 
