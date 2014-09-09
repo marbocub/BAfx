@@ -248,7 +248,7 @@ DirectoryView::DirectoryView(BRect frame, const char* name)
 	  		B_SINGLE_SELECTION_LIST,B_FOLLOW_ALL_SIDES,
 			B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)),
 	  mScrollView(new BScrollView(NULL,mListView,
-	  		B_FOLLOW_ALL_SIDES,0,false,true,B_PLAIN_BORDER)),
+	  		B_FOLLOW_ALL_SIDES,0,false,true,B_NO_BORDER)),
 	  mCountView(new EntryCountView(BRect(0,0,0,0),NULL,
 	  		B_FOLLOW_LEFT_RIGHT|B_FOLLOW_BOTTOM,B_WILL_DRAW)),
 	  entry_(NULL),
@@ -331,7 +331,6 @@ DirectoryView::OpenDirectory(const Entry* dir)
 		BEntry parent;
 		if (bentry.GetParent(&parent) == B_OK) {
 			parent_ = new Directory(parent);
-			mListView->AddItem(new EntryListItem(parent_, EntryListItem::ENTRY_IS_PARENT));
 		}
 	}
 
@@ -341,6 +340,9 @@ DirectoryView::OpenDirectory(const Entry* dir)
 	delete lv1;
 
 	// show directory entry
+	if (parent_ != NULL) {
+		mListView->AddItem(new EntryListItem(parent_, EntryListItem::ENTRY_IS_PARENT));
+	}
 	mListView->AddEntryList((BList*) &entryList_);
 	mListView->DoSort();
 	if (mListView->CountItems() > 0)
