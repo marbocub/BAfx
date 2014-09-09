@@ -320,13 +320,20 @@ EntryListView::EntryListView(BRect frame, const char* name,
 	list_view_type type, uint32 resizingMode, uint32 flags)
 	: BListView(frame, name, type, resizingMode, flags),
 	  last_selected_(-1),
+#if B_BEOS_VERSION >= 0x0500
 	  color_selected_(ui_color(B_MENU_SELECTION_BACKGROUND_COLOR)),
+#else
+	  color_selected_(ui_color(B_MENU_BACKGROUND_COLOR)),
+#endif
 	  color_cursor_(ui_color(B_WINDOW_TAB_COLOR)),
+#if B_BEOS_VERSION >= 0x0500
 	  color_file_(ui_color(B_MENU_ITEM_TEXT_COLOR)),
 	  color_dir_(ui_color(B_MENU_ITEM_TEXT_COLOR)),
 	  color_executable_(ui_color(B_MENU_ITEM_TEXT_COLOR)),
 	  color_readonly_(ui_color(B_MENU_ITEM_TEXT_COLOR)),
 	  color_hidden_(ui_color(B_MENU_ITEM_TEXT_COLOR)),
+#else
+#endif
 	  keymap_func(bafx_key_to_message)
 {
 	BListView::SetFont(be_fixed_font);

@@ -8,8 +8,9 @@
 #include "PanedView.h"
 
 #include <View.h> 
-#include <Cursor.h>
-
+#if B_BEOS_VERSION >= 0x0500
+# include <Cursor.h>
+#endif
 
 #undef CONTROL_DEBUG
 
@@ -224,11 +225,15 @@ PanedView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
 {
 	if (transit ==  B_ENTERED_VIEW) {
 		if (mOrientation == H_PANED) {
+#if B_BEOS_VERSION >= 0x0500
 			BCursor cursor = BCursor(cursor_h_paned);
 			SetViewCursor(&cursor);
+#endif
 		} else {
+#if B_BEOS_VERSION >= 0x0500
 			BCursor cursor = BCursor(cursor_v_paned);
 			SetViewCursor(&cursor);
+#endif
 		}
 	}
 
